@@ -71,6 +71,17 @@
     if (e.key === 'Escape') OMGSWAP.dropdown.close();
   });
 
+  /* Pageview beacon for the daily stats digest (see /api/track, /api/daily-stats).
+     Best-effort, fire-and-forget — never blocks or throws on failure. */
+  try {
+    var payload = JSON.stringify({ page: location.pathname });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/track', new Blob([payload], { type: 'application/json' }));
+    } else {
+      fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: payload, keepalive: true }).catch(function () {});
+    }
+  } catch (e) {}
+
   /* FAQ accordions (generic) */
   document.querySelectorAll('.faq-q').forEach(function (q) {
     q.addEventListener('click', function () {

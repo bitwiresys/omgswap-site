@@ -23,5 +23,8 @@
   ],
   "redirects": [
     { "source": "/home", "destination": "/", "permanent": true }
+  ],
+  "crons": [
+    { "path": "/api/daily-stats", "schedule": "0 0 * * *" }
   ]
 }

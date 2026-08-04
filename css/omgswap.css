@@ -515,6 +515,40 @@ main { display: block; }
   color: #071013; font-weight: 800;
 }
 
+/* ---------- Contact modal ("Связаться в Telegram") ---------- */
+.contact-modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(6, 8, 10, 0.72);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
+  opacity: 0; visibility: hidden; transition: opacity .2s ease, visibility .2s ease;
+  padding: 20px;
+}
+.contact-modal-overlay.open { opacity: 1; visibility: visible; }
+.contact-modal {
+  position: relative;
+  background: #131920; border: 1px solid var(--border-default);
+  border-radius: var(--radius); box-shadow: var(--shadow-pop);
+  padding: 32px; max-width: 440px; width: 100%;
+}
+.contact-modal__close {
+  position: absolute; top: 14px; right: 14px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg-elevated); border: 1px solid var(--border-faint);
+  color: var(--text-muted); font-size: 20px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.contact-modal__close:hover { color: var(--text-primary); border-color: var(--border-default); }
+.contact-modal__body h3 { margin: 0 0 8px; font-size: 20px; }
+.contact-modal__hint { color: var(--text-muted); font-size: 14px; margin: 0 0 20px; }
+.contact-modal__body .form-field { margin-bottom: 14px; }
+.contact-modal__error { color: var(--red); font-size: 13.5px; min-height: 18px; margin-bottom: 10px; }
+.contact-modal__done { text-align: center; padding: 12px 0; }
+.contact-modal__done .big { font-size: 40px; color: var(--accent); margin-bottom: 10px; }
+.contact-modal__done h3 { margin: 0 0 8px; }
+.contact-modal__done p { color: var(--text-muted); margin: 0; }
+
 /* ---------- Reviews ---------- */
 .reviews-section { padding: 64px 0; }
 .reviews-viewport { overflow: hidden; margin: 36px -12px 0; }

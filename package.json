@@ -1,0 +1,9 @@
+{
+  "name": "omgswap-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "OMGSWAP static site with Vercel serverless lead capture + daily stats digest",
+  "dependencies": {
+    "@vercel/kv": "^2.0.0"
+  }
+}

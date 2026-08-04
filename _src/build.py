@@ -51,12 +51,12 @@ def header(active_key):
       {nav_html(active_key)}
     </nav>
     <div class="header__actions">
-      <a class="btn btn-primary btn-sm hidden-sm" href="contacts.html">Оставить заявку</a>
-      <a class="tg-chip" href="https://t.me/pulsenova" target="_blank" rel="noopener" aria-label="Telegram">
+      <button type="button" class="btn btn-primary btn-sm hidden-sm js-open-contact">Оставить заявку</button>
+      <button type="button" class="tg-chip js-open-contact" aria-label="Написать в Telegram">
         <svg viewBox="0 0 22 19" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M21.6 1.65L18.31 17.01c-.24 1.09-.87 1.33-1.78.84l-4.92-3.63-2.41 2.3c-.25.25-.46.46-.94.46l.38-5.06L17.72 3.6c.38-.39-.1-.6-.6-.34L5.71 10.59.78 9.09C-.3 8.74-.3 8 .99 7.51L20.17.08c.94-.28 1.75.2 1.43 1.57Z"/>
         </svg>
-      </a>
+      </button>
       <button class="burger" id="burger" aria-label="Меню" aria-controls="mobileMenu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -67,8 +67,8 @@ def header(active_key):
 <aside class="mobile-menu" id="mobileMenu" aria-hidden="true">
   {mobile_nav_html(active_key)}
   <div class="mm-actions">
-    <a class="btn btn-primary" href="contacts.html">Оставить заявку</a>
-    <a class="btn btn-ghost" href="https://t.me/pulsenova" target="_blank" rel="noopener">Написать в Telegram</a>
+    <button type="button" class="btn btn-primary js-open-contact">Оставить заявку</button>
+    <button type="button" class="btn btn-ghost js-open-contact">Написать в Telegram</button>
   </div>
 </aside>'''
 
@@ -110,9 +110,7 @@ FOOTER = f'''<footer class="footer">
       <div class="footer__col">
         <h4>Контакты</h4>
         <div class="footer__contacts">
-          <a href="https://t.me/pulsenova" target="_blank" rel="noopener">@pulsenova</a>
-          <a href="https://t.me/omgswap" target="_blank" rel="noopener">@omgswap</a>
-          <a href="https://t.me/whorealer" target="_blank" rel="noopener">@whorealer</a>
+          <button type="button" class="btn btn-ghost js-open-contact">Связаться в Telegram</button>
         </div>
       </div>
     </div>
@@ -122,6 +120,39 @@ FOOTER = f'''<footer class="footer">
     </div>
   </div>
 </footer>'''
+
+CONTACT_MODAL = '''<div class="contact-modal-overlay" id="contactModal" aria-hidden="true">
+  <div class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+    <button type="button" class="contact-modal__close" id="contactModalClose" aria-label="Закрыть">&times;</button>
+    <div class="contact-modal__body" id="contactModalForm">
+      <h3 id="contactModalTitle">Связаться в Telegram</h3>
+      <p class="contact-modal__hint">Оставьте юзернейм и сумму обмена — менеджер напишет вам первым.</p>
+      <div class="form-field">
+        <label class="field-label">Ваш Telegram-юзернейм</label>
+        <input class="input" id="cmUsername" type="text" placeholder="@username" autocomplete="off" />
+      </div>
+      <div class="form-field">
+        <label class="field-label">Сумма обмена</label>
+        <input class="input" id="cmAmount" type="number" step="0.01" min="0" placeholder="1000" />
+      </div>
+      <div class="form-field">
+        <label class="field-label">Валюта (необязательно)</label>
+        <input class="input" id="cmCurrency" type="text" placeholder="USD, EUR, CNY..." maxlength="8" />
+      </div>
+      <div class="form-field">
+        <label class="field-label">Комментарий (необязательно)</label>
+        <textarea class="textarea" id="cmComment" rows="2" placeholder="Например, направление или город"></textarea>
+      </div>
+      <div id="contactModalError" class="contact-modal__error" role="alert"></div>
+      <button type="button" class="btn btn-primary btn-lg" id="contactModalSubmit" style="width:100%;">Отправить</button>
+    </div>
+    <div class="contact-modal__done" id="contactModalDone" hidden>
+      <div class="big">✓</div>
+      <h3>Заявка отправлена</h3>
+      <p>Менеджер свяжется с вами в Telegram в ближайшее время.</p>
+    </div>
+  </div>
+</div>'''
 
 PAGES = {
     'index.html': ('index', 'OMGSWAP — точный обмен валют с доставкой',
@@ -159,12 +190,14 @@ def main():
 <main>'''
         tail = f'''</main>
 {FOOTER}
+{CONTACT_MODAL}
 <script src="js/main.js?v={ASSET_V}"></script>
 <script src="js/rates.js?v={ASSET_V}"></script>
 <script src="js/calc.js?v={ASSET_V}"></script>
 <script src="js/feedback.js?v={ASSET_V}"></script>
 <script src="js/reviews.js?v={ASSET_V}"></script>
 <script src="js/guides.js?v={ASSET_V}"></script>
+<script src="js/contact-modal.js?v={ASSET_V}"></script>
 </body>
 </html>'''
         out = os.path.join(ROOT, fname)
