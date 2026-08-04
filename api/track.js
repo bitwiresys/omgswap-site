@@ -1,15 +1,9 @@
 // POST /api/track — tiny pageview beacon, fired once per page load
 // (see js/main.js). No cookies, no IP storage, no PII — just a per-day,
-// per-page counter in Vercel KV that /api/daily-stats reads and resets.
-// Silently no-ops if KV isn't connected to the project yet.
+// per-page counter in Upstash Redis that /api/daily-stats reads and resets.
+// Silently no-ops if the KV integration isn't connected to the project yet.
 
-async function getKV() {
-  try {
-    return require('@vercel/kv').kv;
-  } catch (e) {
-    return null;
-  }
-}
+var { getKV } = require('./_kv');
 
 function todayKey(prefix) {
   var d = new Date().toISOString().slice(0, 10);

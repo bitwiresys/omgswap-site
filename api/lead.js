@@ -2,27 +2,17 @@
 // notifies the manager chats immediately, and appends the lead to today's KV
 // bucket so /api/daily-stats can summarize it later.
 //
-// Storage is optional: if Vercel KV isn't connected to this project yet, the
-// lead still reaches Telegram in real time — it just won't appear in the
-// daily digest. See README for the one-time KV setup step.
+// Storage is optional: if the Upstash Redis integration isn't connected to
+// this project yet, the lead still reaches Telegram in real time — it just
+// won't appear in the daily digest.
 
 var { sendTelegramMessage } = require('./_telegram');
+var { getKV } = require('./_kv');
 
 function escapeHTML(s) {
   return String(s).replace(/[&<>]/g, function (c) {
     return c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;';
   });
-}
-
-async function getKV() {
-  try {
-    var kv = require('@vercel/kv').kv;
-    // Accessing .kv on a project with no KV store connected throws lazily
-    // on first real call, not on require — a no-op ping catches that here.
-    return kv;
-  } catch (e) {
-    return null;
-  }
 }
 
 function todayKey(prefix) {

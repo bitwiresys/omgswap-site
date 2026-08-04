@@ -1,8 +1,8 @@
 // GET /api/daily-stats — triggered once a day by Vercel Cron (see vercel.json).
-// Reads yesterday's KV counters (pageviews + leads), sends a summary to the
-// manager Telegram chats, then leaves the raw keys in place (KV entries
-// expire on their own — see EXPIRE calls in lead.js/track.js) so nothing
-// needs manual cleanup.
+// Reads yesterday's Upstash Redis counters (pageviews + leads), sends a
+// summary to the manager Telegram chats, then leaves the raw keys in place
+// (they expire on their own — see the EXPIRE calls in lead.js/track.js) so
+// nothing needs manual cleanup.
 //
 // Vercel Cron calls this with a GET request carrying an Authorization header
 // (Bearer CRON_SECRET) that Vercel sets automatically when CRON_SECRET is
@@ -10,14 +10,7 @@
 // random visitors hitting the URL.
 
 var { sendTelegramMessage } = require('./_telegram');
-
-async function getKV() {
-  try {
-    return require('@vercel/kv').kv;
-  } catch (e) {
-    return null;
-  }
-}
+var { getKV } = require('./_kv');
 
 function dateKey(offsetDays) {
   var d = new Date();
@@ -55,7 +48,10 @@ module.exports = async function handler(req, res) {
     kv.lrange('leads:' + day, 0, -1)
   ]);
 
+  // The SDK may hand back list entries already-parsed (objects) or as raw
+  // JSON strings depending on version — accept either rather than assuming.
   var leads = (leadsRaw || []).map(function (s) {
+    if (s && typeof s === 'object') return s;
     try { return JSON.parse(s); } catch (e) { return null; }
   }).filter(Boolean);
 
